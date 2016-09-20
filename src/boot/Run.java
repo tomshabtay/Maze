@@ -12,8 +12,7 @@ public class Run {
 		Presenter presenter = new Presenter(view,model);
 		view.addObserver(presenter);
 		model.addObserver(presenter);
-		Thread t = new Thread(view);
-		t.start();
+		view.run();
 		
 		
 	}
