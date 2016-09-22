@@ -20,6 +20,7 @@ import algorithms.search.Searcher;
 import algorithms.search.Solution;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
+import presenter.Presenter;
 
 public class MazeModel extends Observable implements Model, Runnable {
 
@@ -28,9 +29,11 @@ public class MazeModel extends Observable implements Model, Runnable {
 	Properties properties;
 	private ExecutorService executor;
 
+
 	public MazeModel() {
-		//properties = PropertiesLoader.getInstance().getProperties();
-		//executor = Executors.newFixedThreadPool(properties.getNumOfThreads());
+		// properties = PropertiesLoader.getInstance().getProperties();
+		// executor =
+		// Executors.newFixedThreadPool(properties.getNumOfThreads());
 		loadSolutions();
 	}
 
@@ -59,20 +62,14 @@ public class MazeModel extends Observable implements Model, Runnable {
 	}
 
 	public void generateMaze(String name, int x, int y, int z) {
-		executor.submit(new Callable<Maze3d>() {
 
-			@Override
-			public Maze3d call() throws Exception {
-				GrowingTreeGenerator g = new GrowingTreeGenerator();
-				Maze3d maze = g.generate(x, y, z);
-				mazes.put(name, maze);
+		GrowingTreeGenerator g = new GrowingTreeGenerator();
+		Maze3d maze = g.generate(x, y, z);
+		mazes.put(name, maze);
 
-				setChanged();
-				notifyObservers("maze_ready " + name);
-				return maze;
-			}
-
-		});
+		//setChanged();
+		//notifyObservers("maze_ready " + name);
+		
 
 	}
 

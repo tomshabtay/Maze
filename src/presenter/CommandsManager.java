@@ -39,6 +39,7 @@ public class CommandsManager {
 
 	}
 
+	
 	public void start() {
 		
 		view.start();
