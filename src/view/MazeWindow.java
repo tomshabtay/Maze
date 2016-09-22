@@ -8,13 +8,15 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import algorithms.mazeGenerators.Maze3d;
 
-public class MazeWindow extends BasicWindow implements View {
+public class MazeWindow extends BasicWindow {
 
 	private MazeDisplay mazeDisplay;
 
@@ -27,7 +29,7 @@ public class MazeWindow extends BasicWindow implements View {
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
 		btnGroup.setLayout(rowLayout);
 
-		//Button Generate Maze
+		// Button Generate Maze
 		Button btnGenerateMaze = new Button(btnGroup, SWT.PUSH);
 		btnGenerateMaze.setText("Generate maze");
 
@@ -35,8 +37,8 @@ public class MazeWindow extends BasicWindow implements View {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				//Open a Pop-up window with other options
-				//to enter.
+				// Open a Pop-up window with other options
+				// to enter.
 				showGenerateMazeOptions();
 
 			}
@@ -44,53 +46,81 @@ public class MazeWindow extends BasicWindow implements View {
 			@Override
 			public void widgetDefaultSelected(SelectionEvent arg0) {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 		});
 
-		//Button Solve Maze
+		// Button Solve Maze
 		Button btnSolveMaze = new Button(btnGroup, SWT.PUSH);
 		btnSolveMaze.setText("Solve maze");
 
+		btnSolveMaze.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				showSolveMazeOptions();
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
+		
 	}
 
-	protected void showGenerateMazeOptions() {
+	
+	
+	
+	protected void showSolveMazeOptions() {
 		Shell shell = new Shell();
-		shell.setText("Generate Maze");
+		shell.setText("Solve Maze");
 		shell.setSize(300, 200);
 
 		GridLayout layout = new GridLayout(2, false);
 		shell.setLayout(layout);
-		
-		//Text Fields
+
+		// Text Fields
 		Label lblName = new Label(shell, SWT.NONE);
 		lblName.setText("Maze Name: ");
 		Text txtName = new Text(shell, SWT.BORDER);
-		
-		Label lblX = new Label(shell, SWT.NONE);
-		lblX.setText("X size: ");
-		Text txtXsize = new Text(shell, SWT.BORDER);
 
-		Label lblY = new Label(shell, SWT.NONE);
-		lblY.setText("Y size: ");
-		Text txtYsize = new Text(shell, SWT.BORDER);
-		
-		Label lblZ = new Label(shell, SWT.NONE);
-		lblZ.setText("Floors: ");
-		Text txtZsize = new Text(shell, SWT.BORDER);
+		// Algorithm for searching
+		Button[] radios = new Button[2];
 
-		
-		//Button Generate
-		Button btnGenerate = new Button(shell, SWT.PUSH);
-		btnGenerate.setText("Generate");
-		btnGenerate.addSelectionListener(new SelectionListener() {
+		radios[0] = new Button(shell, SWT.RADIO);
+		radios[0].setSelection(true);
+		radios[0].setText("DFS");
+		radios[0].setBounds(10, 5, 75, 30);
+
+		radios[1] = new Button(shell, SWT.RADIO);
+		radios[1].setText("BFS");
+		radios[1].setBounds(10, 5, 75, 30);
+
+		// Button Solve
+		Button btnSolve = new Button(shell, SWT.PUSH);
+		btnSolve.setText("Solve");
+
+		btnSolve.addSelectionListener(new SelectionListener() {
 
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
+				// Check Algo
+				String TextAlgo = null;
+				if (radios[0].getSelection())
+					TextAlgo = "DFS";
+				else if (radios[1].getSelection())
+					TextAlgo = "BFS";
+
 				setChanged();
-				notifyObservers("generate_maze"+  " " + txtName.getText() + " " + txtXsize.getText() + " " + txtYsize.getText() + " " + txtZsize.getText());
+
+				notifyObservers("solve_maze" + " " + txtName.getText() + " " + TextAlgo);
 				shell.close();
+
 			}
 
 			@Override
@@ -104,36 +134,53 @@ public class MazeWindow extends BasicWindow implements View {
 		shell.open();
 	}
 
-	@Override
-	public void notifyMazeIsReady(String name) {
-		display.syncExec(new Runnable() {
+	protected void showGenerateMazeOptions() {
+		Shell shell = new Shell();
+		shell.setText("Generate Maze");
+		shell.setSize(300, 200);
+
+		GridLayout layout = new GridLayout(2, false);
+		shell.setLayout(layout);
+
+		// Text Fields
+		Label lblName = new Label(shell, SWT.NONE);
+		lblName.setText("Maze Name: ");
+		Text txtName = new Text(shell, SWT.BORDER);
+
+		Label lblX = new Label(shell, SWT.NONE);
+		lblX.setText("X size: ");
+		Text txtXsize = new Text(shell, SWT.BORDER);
+
+		Label lblY = new Label(shell, SWT.NONE);
+		lblY.setText("Y size: ");
+		Text txtYsize = new Text(shell, SWT.BORDER);
+
+		Label lblZ = new Label(shell, SWT.NONE);
+		lblZ.setText("Floors: ");
+		Text txtZsize = new Text(shell, SWT.BORDER);
+
+		// Button Generate
+		Button btnGenerate = new Button(shell, SWT.PUSH);
+		btnGenerate.setText("Generate");
+		btnGenerate.addSelectionListener(new SelectionListener() {
 
 			@Override
-			public void run() {
-				MessageBox msg = new MessageBox(shell);
-				msg.setMessage("Maze " + name + " is ready");
-				msg.open();
-
+			public void widgetSelected(SelectionEvent arg0) {
 				setChanged();
-				notifyObservers("display_maze " + name);
+				notifyObservers("generate_maze" + " " + txtName.getText() + " " + txtXsize.getText() + " "
+						+ txtYsize.getText() + " " + txtZsize.getText());
+				shell.close();
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+
 			}
 		});
-	}
 
-	@Override
-	public void displayMaze(Maze3d maze) {
-
-	}
-
-	@Override
-	public void displayMessage(String msg) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void start() {
-		run();
+		mazeDisplay = new MazeDisplay(shell, SWT.NONE);
+		shell.open();
 	}
 
 }

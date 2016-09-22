@@ -1,16 +1,16 @@
 package commands;
 
-import presenter.CommandsManager;
+import presenter.Presenter;
 
 public class DisplayCrossCommand extends CommandClass {
 
-	public DisplayCrossCommand(CommandsManager c) {
-		super(c);
+	public DisplayCrossCommand(Presenter presenter) {
+		super(presenter);
 	}
 
 	@Override
 	public void doCommand(String args) {
-		c.displayCross(args);
+		p.displayCross(args);
 
 	}
 

@@ -2,12 +2,12 @@ package commands;
 
 import java.io.File;
 
-import presenter.CommandsManager;
+import presenter.Presenter;
 
 public class DirCommand extends CommandClass {
 
-	public DirCommand(CommandsManager c) {
-		super(c);
+	public DirCommand(Presenter p) {
+		super(p);
 	}
 
 	@Override
@@ -17,29 +17,29 @@ public class DirCommand extends CommandClass {
 			File folder = new File(args);
 			File[] listOfFiles = folder.listFiles();
 			// Files
-			c.printToOut("Files:\n");
-			c.printToOut("------\n");
+			//p.printToOut("Files:\n");
+			//p.printToOut("------\n");
 
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isFile()) {
-					c.printToOut(listOfFiles[i].getName());
-					c.printToOut("\n");
+					//c.printToOut(listOfFiles[i].getName());
+					//c.printToOut("\n");
 				}
 			}
 
 			// Directory
-			c.printToOut("Directories:\n");
-			c.printToOut("------------\n");
+			//p.printToOut("Directories:\n");
+			//p.printToOut("------------\n");
 			for (int i = 0; i < listOfFiles.length; i++) {
 				if (listOfFiles[i].isDirectory()) {
-					c.printToOut(listOfFiles[i].getName());
-					c.printToOut("\n");
+					//c.printToOut(listOfFiles[i].getName());
+					//c.printToOut("\n");
 				}
 			}
-			c.printToOut("\n");
+			//p.printToOut("\n");
 
 		} catch (Exception e) {
-			c.printToOut("No files, try another path.\n");
+			//p.printToOut("No files, try another path.\n");
 		}
 
 	}

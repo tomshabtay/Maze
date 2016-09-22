@@ -1,17 +1,17 @@
 package commands;
 
-import presenter.CommandsManager;
+import presenter.Presenter;
 
 public class GenerateMazeCommand extends CommandClass {
 
-	public GenerateMazeCommand(CommandsManager c) {
-		super(c);
+	public GenerateMazeCommand(Presenter presenter) {
+		super(presenter);
 	}
 
 	@Override
 	public void doCommand(String args) {
 		String [] argsArray = args.split(" ");
-		c.GenerateMaze(argsArray[0],
+		p.GenerateMaze(argsArray[0],
 					   Integer.valueOf(argsArray[1]),
 				  	   Integer.valueOf(argsArray[2]), 
 				       Integer.valueOf(argsArray[3]));

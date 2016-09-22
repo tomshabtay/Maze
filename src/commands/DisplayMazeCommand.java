@@ -1,16 +1,16 @@
 package commands;
 
-import presenter.CommandsManager;
+import presenter.Presenter;
 
 public class DisplayMazeCommand extends CommandClass {
 
-	public DisplayMazeCommand(CommandsManager c) {
-		super(c);
+	public DisplayMazeCommand(Presenter presenter) {
+		super(presenter);
 	}
 
 	@Override
 	public void doCommand(String args) {
-		c.displayMaze(args);
+		p.displayMaze(args);
 
 	}
 

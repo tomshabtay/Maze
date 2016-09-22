@@ -1,16 +1,16 @@
 package commands;
 
-import presenter.CommandsManager;
+import presenter.Presenter;
 
 public class DisplaySolutionCommand extends CommandClass {
 
-	public DisplaySolutionCommand(CommandsManager c) {
-		super(c);
+	public DisplaySolutionCommand(Presenter presenter) {
+		super(presenter);
 	}
 
 	@Override
 	public void doCommand(String args) {
-		c.displaySolution(args);
+		p.displaySolution(args);
 
 	}
 

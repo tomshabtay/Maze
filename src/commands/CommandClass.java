@@ -1,12 +1,13 @@
 package commands;
 
-import presenter.CommandsManager;
+import presenter.Presenter;
 
 public abstract class CommandClass implements Command{
-	CommandsManager c;
+	Presenter p;
 	
-	public CommandClass(CommandsManager c)
+	public CommandClass(Presenter presenter)
 	{
-		this.c = c;
+		this.p = presenter;
 	}
+
 }

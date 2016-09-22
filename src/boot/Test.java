@@ -13,8 +13,8 @@ public class Test {
 		Presenter presenter = new Presenter(view,model);
 		view.addObserver(presenter);
 		model.addObserver(presenter);
-		//view.run();
-		view.testObs();
+		view.run();
+
 	}
 
 }

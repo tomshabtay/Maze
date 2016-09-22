@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Observable;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -34,6 +35,8 @@ public class MazeModel extends Observable implements Model, Runnable {
 		// properties = PropertiesLoader.getInstance().getProperties();
 		// executor =
 		// Executors.newFixedThreadPool(properties.getNumOfThreads());
+		
+		this.mazes = new HashMap<String, Maze3d>(); 
 		loadSolutions();
 	}
 
@@ -66,6 +69,7 @@ public class MazeModel extends Observable implements Model, Runnable {
 		GrowingTreeGenerator g = new GrowingTreeGenerator();
 		Maze3d maze = g.generate(x, y, z);
 		mazes.put(name, maze);
+
 
 		//setChanged();
 		//notifyObservers("maze_ready " + name);
@@ -170,5 +174,12 @@ public class MazeModel extends Observable implements Model, Runnable {
 
 		this.solutions.put(argsArray[0], solution);
 
+	}
+
+	public String[] listMazes() {
+		
+		String[] s ={"avi","tom","maze1"} ;
+		
+		return s;
 	}
 }
