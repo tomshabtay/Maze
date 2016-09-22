@@ -1,4 +1,4 @@
-package presenter;
+package model;
 
 import java.beans.XMLDecoder;
 import java.io.FileInputStream;
