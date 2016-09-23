@@ -1,11 +1,9 @@
 package view;
 
-import java.util.Observable;
-import java.util.Observer;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
@@ -18,7 +16,6 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
 import algorithms.mazeGenerators.Maze3d;
-import presenter.Presenter;
 
 public class MazeView extends BasicWindow  implements View{
 
@@ -34,7 +31,36 @@ public class MazeView extends BasicWindow  implements View{
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
 		btnGroup.setLayout(rowLayout);
 
+		//Menu Bar
 		menuBar();
+		
+		//Maze Display
+		mazeDisplay = new MazeDisplay(shell, SWT.BORDER);
+		
+		
+		//Button Play
+				Button btnPlay = new Button(btnGroup, SWT.PUSH);
+				btnPlay.setText("Play");
+
+				btnPlay.addSelectionListener(new SelectionListener() {
+
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						
+						startPlay();
+
+					}
+
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+
+					}
+
+
+
+				});
+		
 		
 		//Button Generate Maze
 		Button btnGenerateMaze = new Button(btnGroup, SWT.PUSH);
@@ -98,6 +124,15 @@ public class MazeView extends BasicWindow  implements View{
 					}
 				});
 
+	}
+
+	protected void startPlay() {
+		//Maze Display
+				
+		mazeDisplay.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
+		mazeDisplay.setMazeDataSample();
+		mazeDisplay.start();
+		
 	}
 
 	protected void menuBar(){

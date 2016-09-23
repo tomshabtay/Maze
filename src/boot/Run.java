@@ -4,7 +4,7 @@ package boot;
 import model.MazeModel;
 import presenter.Presenter;
 import view.MazeView;
-import view.MazeWindow;
+
 
 public class Run {
 
