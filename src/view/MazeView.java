@@ -36,6 +36,7 @@ public class MazeView extends BasicWindow  implements View{
 		
 		//Maze Display
 		mazeDisplay = new MazeDisplay(shell, SWT.BORDER);
+		mazeDisplay.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
 		
 		
 		//Button Play
@@ -127,14 +128,18 @@ public class MazeView extends BasicWindow  implements View{
 	}
 
 	protected void startPlay() {
-		//Maze Display
-				
-		mazeDisplay.setLayoutData(new GridData(SWT.FILL,SWT.FILL,true,true));
-		mazeDisplay.setMazeDataSample();
+		
+		setChanged();
+		notifyObservers("get_maze tom");	
+	}
+
+	public void play(Maze3d maze){
+		mazeDisplay.setMaze(maze);
 		mazeDisplay.start();
 		
 	}
-
+	
+	
 	protected void menuBar(){
 
 		Menu menuBar = new Menu(shell, SWT.BAR);

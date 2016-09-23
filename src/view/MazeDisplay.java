@@ -12,15 +12,25 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Shell;
 
+import algorithms.mazeGenerators.Maze3d;
+import game.Game;
+import game.GameCharacter;
+
 public class MazeDisplay extends Canvas {
 
 	private int[][] mazeData;
+	
+	Game game;
+	
 	GameCharacter character;
 	Timer timer;
 	TimerTask timerTask;
+	Maze3d maze;
+	protected int level = 0;
 
 	public void setMazeData(int[][] mazeData) {
 		this.mazeData = mazeData;
+		this.maze = null;
 		this.redraw();
 	}
 
@@ -49,17 +59,29 @@ public class MazeDisplay extends Canvas {
 					character.incX();
 
 				}
+				
+				if(e.character == 'e'){
+					System.out.println("e");
+					level++;
+
+				}
+				if(e.character == 'q'){
+					System.out.println("e");
+					level--;
+
+				}
 
 			}
 		});
 
 
-		character = new GameCharacter(10, 10);
 
 		this.addPaintListener(new PaintListener() {
 
 			@Override
 			public void paintControl(PaintEvent e) {
+				if (maze !=null)mazeData = maze.getCrossSectionByZ(character.getZ());
+				
 				if (mazeData == null)
 					return;
 
@@ -116,5 +138,12 @@ public class MazeDisplay extends Canvas {
 
 		this.setMazeData(maze);
 
+	}
+
+	public void setMaze(Maze3d maze) {
+		this.maze = maze;
+		character = new GameCharacter(maze.getStartPosition().getX(),maze.getStartPosition().getY(),maze.getStartPosition().getZ());
+		level = maze.getStartPosition().getZ();
+		game = new Game(character,maze,level);
 	}
 }

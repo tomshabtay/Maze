@@ -28,15 +28,18 @@ public class MazeModel extends Observable implements Model, Runnable {
 	HashMap<String, Solution> solutions;
 	HashMap<String, Maze3d> mazes;
 	Properties properties;
+	
 	private ExecutorService executor;
 
-
+	Maze3d currentMaze;
+	
 	public MazeModel() {
 		// properties = PropertiesLoader.getInstance().getProperties();
 		// executor =
 		// Executors.newFixedThreadPool(properties.getNumOfThreads());
 		
 		this.mazes = new HashMap<String, Maze3d>(); 
+		this.solutions =  new HashMap<String, Solution>(); 
 		loadSolutions();
 	}
 
@@ -146,13 +149,13 @@ public class MazeModel extends Observable implements Model, Runnable {
 	}
 
 	public void displaySolution(String args) {
-		// TODO Auto-generated method stub
-
+		String[] argsArray = args.split(" ");
+		solutions.get(argsArray[0]).printSolution();
 	}
 
 	public void displayMaze(String args) {
 		String[] argsArray = args.split(" ");
-		solutions.get(argsArray[0]).printSolution();
+		mazes.get(argsArray[0]).printMaze();
 
 	}
 
@@ -181,5 +184,28 @@ public class MazeModel extends Observable implements Model, Runnable {
 		String[] s ={"avi","tom","maze1"} ;
 		
 		return s;
+	}
+
+	public Maze3d getMazeByName(String args) {
+		String[] argsArray = args.split(" ");
+		Maze3d m = mazes.get(argsArray[0]);
+		return m;
+		
+	}
+
+	public void test() {
+		
+		System.out.println("Generating Maze 'tom'.");
+		generateMaze("tom", 15, 15, 10);
+		
+		System.out.println("Solving Maze.");
+		solveMaze("tom BFS");
+		
+		System.out.println("Showing Solution:");
+		displaySolution("tom");
+		
+		System.out.println("Displaying maze");
+		displayMaze("tom");
+		
 	}
 }

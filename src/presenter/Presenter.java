@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
+import algorithms.mazeGenerators.Maze3d;
 import commands.Command;
 import commands.DirCommand;
 import commands.DisplayCrossCommand;
 import commands.DisplayMazeCommand;
 import commands.DisplaySolutionCommand;
 import commands.GenerateMazeCommand;
+import commands.GetMazeCommand;
 import commands.ListMazesCommand;
 import commands.LoadMazeCommand;
 import commands.SaveMazeCommand;
@@ -43,6 +45,8 @@ public class Presenter implements Observer {
 		commands.put("solve", new SolveMazeCommand(this));
 		commands.put("display_solution", new DisplaySolutionCommand(this));
 		commands.put("list_mazes_in_map", new ListMazesCommand(this));
+		commands.put("get_maze", new GetMazeCommand(this));
+		
 
 	}
 
@@ -64,8 +68,8 @@ public class Presenter implements Observer {
 		// Execute the command
 
 		if (command != null) {
-			command.doCommand(null);
-			//command.doCommand(str.substring(str.split(" ")[0].length() + 1));
+			//command.doCommand(null);
+			command.doCommand(str.substring(str.split(" ")[0].length() + 1));
 			}
 
 	}
@@ -124,6 +128,12 @@ public void start() {
 	public void ListMazes() {
 		String[] mazes = model.listMazes();
 		view.getMazeList(mazes);
+		
+	}
+
+	public void getMaze(String args) {
+		Maze3d maze = model.getMazeByName(args);
+		view.play(maze);
 		
 	}
 	

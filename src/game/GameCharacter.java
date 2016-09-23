@@ -1,4 +1,4 @@
-package view;
+package game;
 
 
 import org.eclipse.swt.events.PaintEvent;
@@ -8,11 +8,12 @@ import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 
 public class GameCharacter{
-	int x,y;
+	int x,y,z;
 	
-	public GameCharacter(int x,int y){
+	public GameCharacter(int x,int y,int z){
 		this.x = x;
 		this.y = y;
+		this.z = z;
 	}
 	
 
@@ -50,6 +51,13 @@ public class GameCharacter{
 	public void incY() {
 		y++;
 		
+	}
+
+
+
+	public int getZ() {
+
+		return z;
 	}
 	
 	
