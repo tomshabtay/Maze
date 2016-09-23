@@ -8,12 +8,10 @@ import algorithms.mazeGenerators.Maze3d;
 import algorithms.mazeGenerators.Position;
 
 public class GameCharacter{
-	int x,y,z;
+	Position p;
 	
 	public GameCharacter(int x,int y,int z){
-		this.x = x;
-		this.y = y;
-		this.z = z;
+		p.set(x, y, z);
 	}
 	
 
@@ -28,7 +26,7 @@ public class GameCharacter{
 
 
 	public void decY() {
-		y--;
+		p.decX();
 		
 	}
 

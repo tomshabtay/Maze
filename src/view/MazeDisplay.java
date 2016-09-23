@@ -42,11 +42,11 @@ public class MazeDisplay extends Canvas {
 			public void keyPressed(KeyEvent e){
 				if(e.character == 'w'){
 					System.out.println("w");
-					character.decY();
+					game.moveUp();
 				}
 				if(e.character == 's'){
 					System.out.println("s");
-					character.incY();
+					game.moveDown();
 
 				}
 				if(e.character == 'a'){

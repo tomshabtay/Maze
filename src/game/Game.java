@@ -14,4 +14,9 @@ public class Game {
 		this.maze = maze;
 	}
 
+	public void moveUp(){
+		maze.getPossibleMoves(p)
+	}
+	
+	
 }
