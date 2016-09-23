@@ -94,6 +94,31 @@ public class Maze3d {
 		return s.split(",");
 	}
 
+	// For Game Class
+	public String getPossibleMovesString(Position p) {
+		String s = "";
+		if (p.getX() - 1 > 0 && this.maze3d[p.getX() - 1][p.getY()][p.getZ()] != 1) {
+			s = s + "left,";
+		}
+		if (p.getX() + 1 < this.x && this.maze3d[p.getX() + 1][p.getY()][p.getZ()] != 1) {
+			s = s + "right,";
+		}
+		if (p.getY() + 1 < this.y && this.maze3d[p.getX()][p.getY() + 1][p.getZ()] != 1) {
+			s = s + "down,";
+		}
+		if (p.getY() - 1 > 0 && this.maze3d[p.getX()][p.getY() - 1][p.getZ()] != 1) {
+			s = s + "up,";
+		}
+		if (p.getZ() + 1 < this.z && this.maze3d[p.getX()][p.getY()][p.getZ() + 1] != 1) {
+			s = s + "celling,";
+		}
+		if (p.getZ() - 1 > 0 && this.maze3d[p.getX()][p.getY()][p.getZ() - 1] != 1) {
+			s = s + "floor,";
+		}
+
+		return s;
+	}
+
 	public int[][][] getMaze3d() {
 		return maze3d;
 	}
@@ -245,34 +270,33 @@ public class Maze3d {
 	}
 
 	public byte[] toByteArray() {
-		ArrayList<Byte> arr = new  ArrayList<Byte>();
+		ArrayList<Byte> arr = new ArrayList<Byte>();
 
+		// adding the size
+		arr.add((byte) this.x);
+		arr.add((byte) this.y);
+		arr.add((byte) this.z);
 
-		//adding the size
-		arr.add((byte)this.x);
-		arr.add((byte)this.y);
-		arr.add((byte)this.z);
+		// adding the positions
+		arr.add((byte) this.startPosition.getX());
+		arr.add((byte) this.startPosition.getY());
+		arr.add((byte) this.startPosition.getZ());
 
-		//adding the positions
-		arr.add((byte)this.startPosition.getX());
-		arr.add((byte)this.startPosition.getY());
-		arr.add((byte)this.startPosition.getZ());
+		arr.add((byte) this.exitPosition.getX());
+		arr.add((byte) this.exitPosition.getY());
+		arr.add((byte) this.exitPosition.getZ());
 
-		arr.add((byte)this.exitPosition.getX());
-		arr.add((byte)this.exitPosition.getY());
-		arr.add((byte)this.exitPosition.getZ());
-
-		//adding the maze
+		// adding the maze
 		for (int i = 0; i < this.z; i++) {
 			for (int j = 0; j < this.y; j++) {
 				for (int j2 = 0; j2 < this.x; j2++) {
-					arr.add((byte)this.maze3d[j2][j][i]);
+					arr.add((byte) this.maze3d[j2][j][i]);
 				}
 			}
 		}
 
-		//converting the ArrayList to Array
-		byte [] arr2 = new byte[arr.size()];
+		// converting the ArrayList to Array
+		byte[] arr2 = new byte[arr.size()];
 		for (int i = 0; i < arr.size(); i++) {
 			arr2[i] = arr.get(i);
 		}
@@ -283,24 +307,43 @@ public class Maze3d {
 	@Override
 	public boolean equals(Object obj) {
 		Maze3d m = (Maze3d) obj;
-		//checking positions and size
-		if ((this.x == m.x) && (this.y == m.y) && (this.z == m.z)
-				&& this.exitPosition.equals(m.exitPosition)
-				&& this.startPosition.equals(m.startPosition))
-		{
+		// checking positions and size
+		if ((this.x == m.x) && (this.y == m.y) && (this.z == m.z) && this.exitPosition.equals(m.exitPosition)
+				&& this.startPosition.equals(m.startPosition)) {
 
-			//checking the maze
+			// checking the maze
 			for (int i = 0; i < this.z; i++) {
 				for (int j = 0; j < this.y; j++) {
 					for (int j2 = 0; j2 < this.x; j2++) {
-						if(this.maze3d[j2][j][i] != m.maze3d[j2][j][i]) return false;
+						if (this.maze3d[j2][j][i] != m.maze3d[j2][j][i])
+							return false;
 
 					}
 				}
 			}
-			
+
 			return true;
-			
-		}else return false;
+
+		} else
+			return false;
 	}
-}//end of class
+
+	public boolean possibleToMoveUp(int x, int y, int z) {
+
+		return (this.maze3d[x][y][z] == 0 && this.maze3d[x][y][z + 1] == 0);
+	}
+
+	public void paintMazeIndicators() {
+		paintMaze(startPosition.getX(), startPosition.getY(), startPosition.getZ(), 3);
+		paintMaze(exitPosition.getX(), exitPosition.getY(), exitPosition.getZ(), 4);
+		
+		for (int i = 0; i < this.z; i++) {
+			for (int j = 0; j < this.y; j++) {
+				for (int j2 = 0; j2 < this.x; j2++) {
+					if (this.maze3d[j2][j][i] == 0 && this.maze3d[j2][j][i + 1] == 0) this.maze3d[j2][j][i] = 2;
+				}
+			}
+		}
+	}
+
+}// end of class

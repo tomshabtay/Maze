@@ -80,36 +80,6 @@ public class Position {
 			return false;
 	}
 
-	public void incX() {
-		if (this.x < Position.limitX)
-			this.x++;
-	}
-
-	public void incY() {
-		if (this.y < Position.limitY)
-			this.y++;
-	}
-
-	public void incZ() {
-		if (this.z < Position.limitZ)
-			this.z++;
-	}
-
-	public void decX() {
-		if (this.x > 0)
-			this.x--;
-	}
-
-	public void decY() {
-		if (this.y > 0)
-			this.y--;
-	}
-
-	public void decZ() {
-		if (this.z > 0)
-			this.z--;
-	}
-
 	public void printPosition() {
 		System.out.print("(" + this.x + "," + this.y + "," + this.z + ")");
 	}
@@ -150,6 +120,62 @@ public class Position {
 			return true;
 		} else
 			return false;
+	}
+
+	public void incX() {
+		if (this.x < Position.limitX)
+			this.x++;
+	}
+
+	public void incY() {
+		if (this.y < Position.limitY)
+			this.y++;
+	}
+
+	public void incZ() {
+		if (this.z < Position.limitZ)
+			this.z++;
+	}
+
+	public void decX() {
+		if (this.x > 0)
+			this.x--;
+	}
+
+	public void decY() {
+		if (this.y > 0)
+			this.y--;
+	}
+
+	public void decZ() {
+		if (this.z > 0)
+			this.z--;
+	}
+	
+	
+	//Game Moves
+	public void moveLeft() {
+			this.x--;
+	}
+
+	public void moveDown() {
+			this.y++;
+	}
+
+	public void moveFloorUp() {
+			this.z++;
+	}
+
+	public void moveRight() {
+			this.x++;
+	}
+
+	public void moveUp() {
+			this.y--;
+	}
+
+	public void moveFloorDown() {
+			this.z--;
 	}
 
 }

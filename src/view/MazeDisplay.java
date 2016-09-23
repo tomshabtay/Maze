@@ -13,20 +13,20 @@ import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Shell;
 
 import algorithms.mazeGenerators.Maze3d;
+import algorithms.mazeGenerators.Position;
 import game.Game;
 import game.GameCharacter;
 
 public class MazeDisplay extends Canvas {
 
 	private int[][] mazeData;
-	
+
 	Game game;
-	
+
 	GameCharacter character;
 	Timer timer;
 	TimerTask timerTask;
 	Maze3d maze;
-	protected int level = 0;
 
 	public void setMazeData(int[][] mazeData) {
 		this.mazeData = mazeData;
@@ -43,31 +43,34 @@ public class MazeDisplay extends Canvas {
 				if(e.character == 'w'){
 					System.out.println("w");
 					game.moveUp();
+					info();
 				}
 				if(e.character == 's'){
-					System.out.println("s");
 					game.moveDown();
-
-				}
-				if(e.character == 'a'){
-					System.out.println("a");
-					character.decX();
+					info();
 
 				}
 				if(e.character == 'd'){
-					System.out.println("d");
-					character.incX();
+					game.moveRight();
+					info();
 
 				}
-				
+				if(e.character == 'a'){
+					game.moveLeft();
+					info();
+
+				}
+
 				if(e.character == 'e'){
-					System.out.println("e");
-					level++;
+					game.moveFloorUp();
+					info();
+
 
 				}
 				if(e.character == 'q'){
-					System.out.println("e");
-					level--;
+					game.moveFloorDown();
+					info();
+
 
 				}
 
@@ -81,7 +84,7 @@ public class MazeDisplay extends Canvas {
 			@Override
 			public void paintControl(PaintEvent e) {
 				if (maze !=null)mazeData = maze.getCrossSectionByZ(character.getZ());
-				
+
 				if (mazeData == null)
 					return;
 
@@ -94,13 +97,38 @@ public class MazeDisplay extends Canvas {
 				int w = width / mazeData[0].length;
 				int h = height / mazeData.length;
 
+
+				//making the maze
 				for (int i = 0; i < mazeData.length; i++)
 					for (int j = 0; j < mazeData[i].length; j++) {
 						int x = j * w;
 						int y = i * h;
-						if (mazeData[i][j] != 0)
+						if (mazeData[j][i] == 1){ //draw wall
+						e.gc.setForeground(new Color(null, 0, 0, 0));
+						e.gc.setBackground(new Color(null, 0, 0, 0));
+						e.gc.fillRectangle(x, y, w, h);
+						}
+						
+						else if(mazeData[j][i] == 2) { //move up
+						e.gc.setForeground(new Color(null, 55, 55, 0));
+						e.gc.setBackground(new Color(null, 55, 55, 0));
+						e.gc.fillRectangle(x, y, w/4, h/4);
+						}
+						
+						else if(mazeData[j][i] == 3) {//starting point
+							e.gc.setForeground(new Color(null, 90, 90, 0));
+							e.gc.setBackground(new Color(null, 90, 90, 0));
 							e.gc.fillRectangle(x, y, w, h);
+							}
+						
+						else if(mazeData[j][i] == 4) {//exit point
+							e.gc.setForeground(new Color(null, 160, 160, 0));
+							e.gc.setBackground(new Color(null, 160, 160, 0));
+							e.gc.fillRectangle(x, y, w, h);
+							}
 					}
+
+
 				character.paint(e, w, h);
 
 			}
@@ -141,9 +169,15 @@ public class MazeDisplay extends Canvas {
 	}
 
 	public void setMaze(Maze3d maze) {
-		this.maze = maze;
+
 		character = new GameCharacter(maze.getStartPosition().getX(),maze.getStartPosition().getY(),maze.getStartPosition().getZ());
-		level = maze.getStartPosition().getZ();
-		game = new Game(character,maze,level);
+		maze.paintMazeIndicators();
+		this.maze = maze;
+		game = new Game(character,maze);
+	}
+
+	public void info(){
+		System.out.println(character.getP());
+		System.out.println(maze.getPossibleMovesString(character.getP()));
 	}
 }

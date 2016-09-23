@@ -11,52 +11,30 @@ public class GameCharacter{
 	Position p;
 	
 	public GameCharacter(int x,int y,int z){
-		p.set(x, y, z);
+		p = new Position(x, y, z);
+
 	}
 	
 
 	
 	public void paint(PaintEvent e,int w,int h){
 		   e.gc.setForeground(new Color(null,255,0,0));
-		   e.gc.drawOval(x*w,y*h,w,h);
-		   System.out.println(x+","+y);
-		
-	}
-
-
-
-	public void decY() {
-		p.decX();
-		
-	}
-
-
-
-	public void incX() {
-		x++;
-		
-	}
-
-
-
-	public void decX() {
-		x--;
-		
-	}
-
-
-
-	public void incY() {
-		y++;
+		   e.gc.drawOval(p.getX()*w,p.getY()*h,w,h);
 		
 	}
 
 
 
 	public int getZ() {
-
-		return z;
+		
+		return p.getZ();
 	}
 	
+	public Position getP()
+	{
+		return p;
+	}
+
+
 	
 }

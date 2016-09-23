@@ -196,7 +196,7 @@ public class MazeModel extends Observable implements Model, Runnable {
 	public void test() {
 		
 		System.out.println("Generating Maze 'tom'.");
-		generateMaze("tom", 15, 15, 10);
+		generateMaze("tom", 8, 8, 6);
 		
 		System.out.println("Solving Maze.");
 		solveMaze("tom BFS");
