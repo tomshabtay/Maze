@@ -62,6 +62,26 @@ public class MazeView extends BasicWindow implements View {
 			}
 
 		});
+		
+		// Button Play
+				Button btnHint = new Button(btnGroup1, SWT.PUSH);
+				btnHint.setText("Hint");
+
+				btnHint.addSelectionListener(new SelectionListener() {
+
+					@Override
+					public void widgetSelected(SelectionEvent arg0) {
+						mazeDisplay.showHint();
+
+					}
+
+					@Override
+					public void widgetDefaultSelected(SelectionEvent arg0) {
+						// TODO Auto-generated method stub
+
+					}
+
+				});
 
 		
 		

@@ -44,5 +44,16 @@ public class GameCharacter{
 	}
 
 
+
+	public int getY() {
+		return p.getY();
+	}
+	
+	public int getX() {
+		return p.getX();
+	}
+
+
+
 	
 }

@@ -55,4 +55,10 @@ public class SearchableMaze implements Searchable {
 		return arr;
 	}
 
+	public void setStartPosition(int x,int y,int z) {
+		Position p = new Position(x,y,z);
+		this.maze.setStartPosition(p);
+		
+	}
+
 }

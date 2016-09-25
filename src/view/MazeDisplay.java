@@ -11,6 +11,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.events.PaintEvent;
 import org.eclipse.swt.events.PaintListener;
 import org.eclipse.swt.graphics.Color;
+import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.widgets.Canvas;
 import org.eclipse.swt.widgets.Shell;
 
@@ -32,6 +33,10 @@ public class MazeDisplay extends Canvas {
 	TimerTask timerTask;
 	Maze3d maze;
 
+	int pointsForStar[] = { 0, 85, 75, 75, 100, 10, 
+			125, 75, 200, 85, 150, 125, 160, 190, 100, 150, 
+			40, 190, 50, 125, 0, 85 };
+
 	public void setMazeData(int[][] mazeData) {
 		this.mazeData = mazeData;
 		this.maze = null;
@@ -45,12 +50,12 @@ public class MazeDisplay extends Canvas {
 		// Key Listener
 		this.addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e) {
-				
+
 				if (e.character == 't') {
 					System.out.println("w");
-			
+
 				}
-		
+
 				if (e.character == 'w') {
 
 					game.moveUp();
@@ -105,6 +110,8 @@ public class MazeDisplay extends Canvas {
 				int w = width / mazeData[0].length;
 				int h = height / mazeData.length;
 
+
+
 				// making the maze
 				for (int i = 0; i < mazeData.length; i++)
 					for (int j = 0; j < mazeData[i].length; j++) {
@@ -122,7 +129,16 @@ public class MazeDisplay extends Canvas {
 							e.gc.fillRectangle(x, y, w / 4, h / 4);
 						}
 
-						
+						else if(maze.isEqualsGoalPosition(j, i, character.getZ())){
+							
+						}
+
+						else if(maze.isEqualsStartPosition(j, i, character.getZ())){
+							
+							e.gc.fillOval(x, y, w , h );
+						}
+
+
 					}
 
 				character.paint(e, w, h);
@@ -152,7 +168,7 @@ public class MazeDisplay extends Canvas {
 		character = new GameCharacter(maze.getStartPosition().getX(), maze.getStartPosition().getY(),
 				maze.getStartPosition().getZ());
 		this.maze = maze;
-		game = new Game(character, maze);
+		game = new Game(character, maze,this);
 	}
 
 	public void info() {
@@ -176,11 +192,11 @@ public class MazeDisplay extends Canvas {
 
 							character.setPosition(maze.getGoalPosition().getX(), maze.getGoalPosition().getY(),
 									maze.getGoalPosition().getZ());
-							
+
 							timerTask.cancel();
 						}
 
-							redraw();
+						redraw();
 					}
 				});
 
@@ -190,7 +206,13 @@ public class MazeDisplay extends Canvas {
 		timer.scheduleAtFixedRate(timerTask, 0, 300);
 
 	}
-	
-	
-	
+
+	public void showHint() {
+		if (game != null) game.moveCharcterHint();
+		
+	}
+
+
+
+
 }

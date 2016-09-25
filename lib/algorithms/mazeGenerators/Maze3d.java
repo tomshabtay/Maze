@@ -356,4 +356,14 @@ public class Maze3d implements Serializable {
 		}
 	}
 
+	public boolean isEqualsGoalPosition(int x,int y, int z) {
+		return (exitPosition.getX() == x && exitPosition.getY() == y && exitPosition.getZ() == z);
+
+	}
+	
+	public boolean isEqualsStartPosition(int x,int y, int z) {
+		return (startPosition.getX() == x && startPosition.getY() == y && startPosition.getZ() == z);
+
+	}
+
 }// end of class
