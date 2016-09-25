@@ -1,13 +1,19 @@
 package algorithms.search;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
 /**
  * The Class Solution giving as the solution for a problem genrated by the Searcher.
  */
-public class Solution {
+public class Solution implements Serializable  {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The states that giving as the solution. */
 	private ArrayList<State> states;
 	

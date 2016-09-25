@@ -48,12 +48,9 @@ public class MazeDisplay extends Canvas {
 				
 				if (e.character == 't') {
 					System.out.println("w");
-					
-					
+			
 				}
-				
-				
-				
+		
 				if (e.character == 'w') {
 
 					game.moveUp();
@@ -119,23 +116,13 @@ public class MazeDisplay extends Canvas {
 							e.gc.fillRectangle(x, y, w, h);
 						}
 
-						else if (mazeData[j][i] == 2) { // move up
+						else if (maze.possibleToMoveUp(j, i, character.getZ())) { // move up down
 							e.gc.setForeground(new Color(null, 55, 55, 0));
 							e.gc.setBackground(new Color(null, 55, 55, 0));
 							e.gc.fillRectangle(x, y, w / 4, h / 4);
 						}
 
-						else if (mazeData[j][i] == 3) {// starting point
-							e.gc.setForeground(new Color(null, 90, 90, 0));
-							e.gc.setBackground(new Color(null, 90, 90, 0));
-							e.gc.fillRectangle(x, y, w, h);
-						}
-
-						else if (mazeData[j][i] == 4) {// exit point
-							e.gc.setForeground(new Color(null, 160, 160, 0));
-							e.gc.setBackground(new Color(null, 160, 160, 0));
-							e.gc.fillRectangle(x, y, w, h);
-						}
+						
 					}
 
 				character.paint(e, w, h);
@@ -164,7 +151,6 @@ public class MazeDisplay extends Canvas {
 
 		character = new GameCharacter(maze.getStartPosition().getX(), maze.getStartPosition().getY(),
 				maze.getStartPosition().getZ());
-		maze.paintMazeIndicators();
 		this.maze = maze;
 		game = new Game(character, maze);
 	}

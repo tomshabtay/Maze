@@ -1,8 +1,14 @@
 package algorithms.mazeGenerators;
 
+import java.io.Serializable;
+
 import algorithms.search.State;
 
-public class Position {
+public class Position implements Serializable  {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1423365832614236800L;
 	private int x, y, z;
 	private static int limitX, limitY, limitZ = 1000;
 

@@ -19,7 +19,12 @@ import commands.LoadMazeCommand;
 import commands.PlayMazeCommand;
 import commands.SaveMazeCommand;
 import commands.SolveMazeCommand;
+import commands.deleteAllMazesCommand;
+import commands.deleteMazeCommand;
+import commands.exitCommand;
 import commands.getMazeSolutionCommand;
+import commands.mazeReadyCommand;
+import commands.solutionReadyCommand;
 import model.MazeModel;
 import view.MazeView;
 
@@ -53,6 +58,12 @@ public class Presenter implements Observer {
 		commands.put("get_maze", new GetMazeCommand(this));
 		commands.put("play_maze", new PlayMazeCommand(this));
 		commands.put("get_maze_solution", new getMazeSolutionCommand(this));
+		commands.put("exit", new exitCommand(this));
+		commands.put("delete_maze", new deleteMazeCommand(this));
+		commands.put("delete_all_mazes", new deleteAllMazesCommand(this));
+		commands.put("maze_ready", new mazeReadyCommand(this));
+		commands.put("solution_ready", new solutionReadyCommand(this));
+
 
 
 	}
@@ -115,7 +126,9 @@ public class Presenter implements Observer {
 	}
 
 	public void exit() {
-		// TODO Auto-generated method stub
+		view.exit();
+		model.exit();
+		
 
 	}
 
@@ -148,6 +161,26 @@ public class Presenter implements Observer {
 		Maze3d m = model.getMazeByName(args);
 		Solution s = model.getSolution(args);
 		if (s!=null) view.getSolution(s,m);
+		
+	}
+
+	public void deleteMaze(String args) {
+		model.deleteMaze(args);
+		
+	}
+
+	public void deleteAllMazes(String args) {
+		model.deleteAllMazes(args);
+		
+	}
+
+	public void mazeReady(String args) {
+		view.displayMessage("The Maze '" + args+"' is ready to play!");
+		
+	}
+
+	public void solutionReady(String args) {
+		view.displayMessage("The solution for '" + args+"' is ready.");
 		
 	}
 

@@ -3,7 +3,10 @@ package model;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -12,6 +15,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.zip.GZIPOutputStream;
 
 import algorithms.mazeGenerators.GrowingTreeGenerator;
 import algorithms.mazeGenerators.Maze3d;
@@ -39,9 +43,61 @@ public class MazeModel extends Observable implements Model, Runnable {
 		// executor =
 		// Executors.newFixedThreadPool(properties.getNumOfThreads());
 		
-		this.mazes = new HashMap<String, Maze3d>(); 
-		this.solutions =  new HashMap<String, Solution>(); 
-		loadSolutions();
+		loadHashMaps();
+		if(mazes == null) this.mazes = new HashMap<String, Maze3d>(); 
+		if(solutions == null) this.solutions =  new HashMap<String, Solution>(); 
+	}
+	
+	public void saveHashMaps(){
+		try {
+		FileOutputStream fosMazes = new FileOutputStream("mazes.ser");
+		FileOutputStream fosSolutions = new FileOutputStream("solutions.ser");
+		
+        ObjectOutputStream oosMazes = new ObjectOutputStream(fosMazes);
+        ObjectOutputStream oosSolutions = new ObjectOutputStream(fosSolutions);
+        
+        oosMazes.writeObject(mazes);
+        oosMazes.close();
+        fosMazes.close();
+        
+        oosSolutions.writeObject(solutions);
+        oosSolutions.close();
+        fosSolutions.close();
+        
+		} catch (IOException e) {
+					
+			e.printStackTrace();
+		}
+	}
+	
+	public void loadHashMaps(){
+		 try
+	      {
+	         FileInputStream fisMazes = new FileInputStream("mazes.ser");
+	         FileInputStream fisSolutions = new FileInputStream("solutions.ser");
+	         
+	         ObjectInputStream oisMazes = new ObjectInputStream(fisMazes);
+	         ObjectInputStream oisSolutions = new ObjectInputStream(fisSolutions);
+	         
+	         mazes = (HashMap) oisMazes.readObject();
+	         oisMazes.close();
+	         fisMazes.close();
+	         
+	         solutions = (HashMap) oisSolutions.readObject();
+	         oisSolutions.close();
+	         fisSolutions.close();
+	         
+	         
+	      }catch(IOException ioe)
+	      {
+	         ioe.printStackTrace();
+	      }
+		 catch(ClassNotFoundException c)
+	      {
+	         System.out.println("Class not found");
+	         c.printStackTrace();
+	         return;
+	      }
 	}
 
 	public Maze3d getMazeByName(String args) {
@@ -62,9 +118,9 @@ public class MazeModel extends Observable implements Model, Runnable {
 		Maze3d maze = g.generate(x, y, z);
 		mazes.put(name, maze);
 
-
-		//setChanged();
-		//notifyObservers("maze_ready " + name);
+		
+		setChanged();
+		notifyObservers("maze_ready " + name);
 		
 
 	}
@@ -74,7 +130,11 @@ public class MazeModel extends Observable implements Model, Runnable {
 		//and saving it in database
 		
 		String[] argsArray = args.split(" ");
+		if(solutions.containsKey(argsArray[0])) return; //check if solution is already exist
+		
 		Maze3d maze = mazes.get(argsArray[0]);
+		
+		
 		SearchableMaze searchableMaze = new SearchableMaze(maze);
 		Searcher searcher;
 		Solution solution = null;
@@ -89,6 +149,9 @@ public class MazeModel extends Observable implements Model, Runnable {
 		}
 	
 		this.solutions.put(argsArray[0], solution);
+		
+		setChanged();
+		notifyObservers("solution_ready " + argsArray[0]);
 	
 	}
 
@@ -139,18 +202,8 @@ public class MazeModel extends Observable implements Model, Runnable {
 
 	}
 
-	public void loadSolutions() {
-		File file = new File("solutions.dat");
-		if (!file.exists())
-			return;
-		// TODO
-	
-	}
 
-	private void saveSolutions() {
-		// TODO Auto-generated method stub
-	
-	}
+
 
 	@Override
 	public void run() {
@@ -160,14 +213,9 @@ public class MazeModel extends Observable implements Model, Runnable {
 	public void test() {
 		
 
-		generateMaze("tom", 8, 8, 6);
-		solveMaze("tom DFS");
-		//solutions.get("tom").printSolution();
 		
-		generateMaze("itzik", 5, 5, 5);
-		solveMaze("itzik DFS");
-		generateMaze("bat7", 13, 13, 4);
-		solveMaze("bat7 DFS");
+		//generateMaze("bat7", 13, 13, 4);
+
 		//generateMaze("big", 35, 35, 100);
 		//solveMaze("big DFS");
 		
@@ -176,7 +224,7 @@ public class MazeModel extends Observable implements Model, Runnable {
 
 	public void exit() {
 		//executor.shutdownNow();
-		saveSolutions();
+		saveHashMaps();
 	
 	}
 
@@ -217,4 +265,18 @@ public class MazeModel extends Observable implements Model, Runnable {
 		return s;
 		
 	}
+
+	public void deleteMaze(String args) {
+		mazes.remove(args);
+		solutions.remove(args);
+		
+	}
+	
+	public void deleteAllMazes(String args) {
+		mazes.clear();
+		solutions.clear();
+		
+	}
+	
+	
 }

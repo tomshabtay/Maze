@@ -1,10 +1,15 @@
 package algorithms.mazeGenerators;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Maze3d {
+public class Maze3d implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2575001000290239353L;
 	private int[][][] maze3d;
 	private Position startPosition;
 	private Position exitPosition;
@@ -329,14 +334,19 @@ public class Maze3d {
 	}
 
 	public boolean possibleToMoveUp(int x, int y, int z) {
-
-		return (this.maze3d[x][y][z] == 0 && this.maze3d[x][y][z + 1] == 0);
+		boolean upMovement = false;
+		boolean downMovement = false;
+		
+		upMovement = (this.maze3d[x][y][z] == 0 && this.maze3d[x][y][z + 1] == 0);
+		downMovement = (this.maze3d[x][y][z] == 0 && this.maze3d[x][y][z - 1] == 0);
+		
+		return (downMovement||upMovement);
 	}
 
 	public void paintMazeIndicators() {
 		paintMaze(startPosition.getX(), startPosition.getY(), startPosition.getZ(), 3);
 		paintMaze(exitPosition.getX(), exitPosition.getY(), exitPosition.getZ(), 4);
-		
+
 		for (int i = 0; i < this.z; i++) {
 			for (int j = 0; j < this.y; j++) {
 				for (int j2 = 0; j2 < this.x; j2++) {

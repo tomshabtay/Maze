@@ -1,5 +1,7 @@
 package algorithms.search;
 
+import java.io.Serializable;
+
 /**
  * State is used by a Searcher to describe a state that the Searcher needs
  * to evaluate.
@@ -14,8 +16,13 @@ package algorithms.search;
 
 
 
-public class State<T> implements Comparable<State> {
+public class State<T> implements Comparable<State> , Serializable  {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	/** The value specific for the problem. */
 	private T value;
 	
