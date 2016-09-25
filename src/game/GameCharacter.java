@@ -18,8 +18,9 @@ public class GameCharacter{
 
 	
 	public void paint(PaintEvent e,int w,int h){
-		   e.gc.setForeground(new Color(null,255,0,0));
-		   e.gc.drawOval(p.getX()*w,p.getY()*h,w,h);
+		   e.gc.setForeground(new Color(null,255,140,0));
+		   e.gc.setBackground(new Color(null,255,140,0));
+		   e.gc.fillOval(p.getX()*w,p.getY()*h,w,h);
 		
 	}
 
@@ -33,6 +34,13 @@ public class GameCharacter{
 	public Position getP()
 	{
 		return p;
+	}
+
+
+
+	public void setPosition(int x, int y, int z) {
+		p.set(x, y, z);
+		
 	}
 
 

@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Observable;
+import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,9 +28,9 @@ public class MazeModel extends Observable implements Model, Runnable {
 
 	HashMap<String, Solution> solutions;
 	HashMap<String, Maze3d> mazes;
-	Properties properties;
 	
-	private ExecutorService executor;
+	//Properties properties;
+	//private ExecutorService executor;
 
 	Maze3d currentMaze;
 	
@@ -43,32 +44,20 @@ public class MazeModel extends Observable implements Model, Runnable {
 		loadSolutions();
 	}
 
-	private void saveSolutions() {
-		// TODO Auto-generated method stub
-
+	public Maze3d getMazeByName(String args) {
+		//Return the maze referenced in args
+		Maze3d m = mazes.get(args);
+		return m;
+		
 	}
 
-	public void loadSolutions() {
-		File file = new File("solutions.dat");
-		if (!file.exists())
-			return;
-		// TODO
-
-	}
-
-	@Override
-	public void run() {
-
-	}
-
-	public void exit() {
-		executor.shutdownNow();
-		saveSolutions();
-
+	public Set<String> listMazes() {
+		//Returns all the mazes in the database
+		return mazes.keySet();
 	}
 
 	public void generateMaze(String name, int x, int y, int z) {
-
+		//Generating a Maze
 		GrowingTreeGenerator g = new GrowingTreeGenerator();
 		Maze3d maze = g.generate(x, y, z);
 		mazes.put(name, maze);
@@ -80,25 +69,27 @@ public class MazeModel extends Observable implements Model, Runnable {
 
 	}
 
-	public void displayCross(String args) {
+	public void solveMaze(String args) {
+		//Creating a solution to the maze in referenced in args
+		//and saving it in database
+		
 		String[] argsArray = args.split(" ");
-		Maze3d m = mazes.get(argsArray[2]);
-		int[][] m2d;
-
-		if (argsArray[0].equalsIgnoreCase("x")) {
-			m2d = m.getCrossSectionByX(Integer.valueOf(argsArray[1]));
-			m.printCrossSectionByX(m2d);
-
+		Maze3d maze = mazes.get(argsArray[0]);
+		SearchableMaze searchableMaze = new SearchableMaze(maze);
+		Searcher searcher;
+		Solution solution = null;
+	
+		// Creating solution
+		if (argsArray[1].equalsIgnoreCase("bfs")) {
+			searcher = new BFS();
+			solution = searcher.search(searchableMaze);
+		} else if (argsArray[1].equalsIgnoreCase("dfs")) {
+			searcher = new DFS();
+			solution = searcher.search(searchableMaze);
 		}
-		if (argsArray[0].equalsIgnoreCase("y")) {
-			m2d = m.getCrossSectionByY(Integer.valueOf(argsArray[1]));
-			m.printCrossSectionByY(m2d);
-		}
-		if (argsArray[0].equalsIgnoreCase("z")) {
-			m2d = m.getCrossSectionByZ(Integer.valueOf(argsArray[1]));
-			m.printCrossSectionByZ(m2d);
-		}
-
+	
+		this.solutions.put(argsArray[0], solution);
+	
 	}
 
 	public void loadMaze(String args) {
@@ -148,64 +139,82 @@ public class MazeModel extends Observable implements Model, Runnable {
 
 	}
 
-	public void displaySolution(String args) {
-		String[] argsArray = args.split(" ");
-		solutions.get(argsArray[0]).printSolution();
+	public void loadSolutions() {
+		File file = new File("solutions.dat");
+		if (!file.exists())
+			return;
+		// TODO
+	
+	}
+
+	private void saveSolutions() {
+		// TODO Auto-generated method stub
+	
+	}
+
+	@Override
+	public void run() {
+	
+	}
+
+	public void test() {
+		
+
+		generateMaze("tom", 8, 8, 6);
+		solveMaze("tom DFS");
+		//solutions.get("tom").printSolution();
+		
+		generateMaze("itzik", 5, 5, 5);
+		solveMaze("itzik DFS");
+		generateMaze("bat7", 13, 13, 4);
+		solveMaze("bat7 DFS");
+		//generateMaze("big", 35, 35, 100);
+		//solveMaze("big DFS");
+		
+		
+	}
+
+	public void exit() {
+		//executor.shutdownNow();
+		saveSolutions();
+	
 	}
 
 	public void displayMaze(String args) {
 		String[] argsArray = args.split(" ");
 		mazes.get(argsArray[0]).printMaze();
-
+	
 	}
 
-	public void solveMaze(String args) {
+	public void displayCross(String args) {
 		String[] argsArray = args.split(" ");
-		Maze3d maze = mazes.get(argsArray[0]);
-		SearchableMaze searchableMaze = new SearchableMaze(maze);
-		Searcher searcher;
-		Solution solution = null;
-
-		// Creating solution
-		if (argsArray[1].equalsIgnoreCase("bfs")) {
-			searcher = new BFS();
-			solution = searcher.search(searchableMaze);
-		} else if (argsArray[1].equalsIgnoreCase("dfs")) {
-			searcher = new DFS();
-			solution = searcher.search(searchableMaze);
+		Maze3d m = mazes.get(argsArray[2]);
+		int[][] m2d;
+	
+		if (argsArray[0].equalsIgnoreCase("x")) {
+			m2d = m.getCrossSectionByX(Integer.valueOf(argsArray[1]));
+			m.printCrossSectionByX(m2d);
+	
 		}
-
-		this.solutions.put(argsArray[0], solution);
-
+		if (argsArray[0].equalsIgnoreCase("y")) {
+			m2d = m.getCrossSectionByY(Integer.valueOf(argsArray[1]));
+			m.printCrossSectionByY(m2d);
+		}
+		if (argsArray[0].equalsIgnoreCase("z")) {
+			m2d = m.getCrossSectionByZ(Integer.valueOf(argsArray[1]));
+			m.printCrossSectionByZ(m2d);
+		}
+	
 	}
 
-	public String[] listMazes() {
-		
-		String[] s ={"avi","tom","maze1"} ;
-		
-		return s;
-	}
-
-	public Maze3d getMazeByName(String args) {
+	public void displaySolution(String args) {
 		String[] argsArray = args.split(" ");
-		Maze3d m = mazes.get(argsArray[0]);
-		return m;
-		
+		solutions.get(argsArray[0]).printSolution();
 	}
 
-	public void test() {
-		
-		System.out.println("Generating Maze 'tom'.");
-		generateMaze("tom", 8, 8, 6);
-		
-		System.out.println("Solving Maze.");
-		solveMaze("tom BFS");
-		
-		System.out.println("Showing Solution:");
-		displaySolution("tom");
-		
-		System.out.println("Displaying maze");
-		displayMaze("tom");
+	public Solution getSolution(String args) {
+		Solution s = solutions.get(args);
+		return s;
 		
 	}
 }
