@@ -8,7 +8,7 @@
    <int>10</int>
   </void>
   <void property="solveMaze">
-   <string>DFS</string>
+   <string>BFS</string>
   </void>
  </object>
 </java>

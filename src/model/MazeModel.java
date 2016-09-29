@@ -9,13 +9,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Observable;
 import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import algorithms.mazeGenerators.GrowingTreeGenerator;
@@ -27,7 +25,6 @@ import algorithms.search.Searcher;
 import algorithms.search.Solution;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
-import presenter.Presenter;
 import presenter.Properties;
 import presenter.PropertiesLoader;
 
@@ -36,51 +33,66 @@ public class MazeModel extends Observable implements Model, Runnable {
 	HashMap<String, Solution> solutions;
 	HashMap<String, Maze3d> mazes;
 	ExecutorService threadPool;
-	
+
 	Properties properties;
 	int numOfThread = 0;
 	String generateAlgorithm;
 	String solveAlgorithm;
 	
 	//private ExecutorService executor;
-	
+
 
 	Maze3d currentMaze;
-	
+
 	public MazeModel() {
-		
+
 		loadProperties();
 		loadHashMaps();
 		if(mazes == null) this.mazes = new HashMap<String, Maze3d>(); 
 		if(solutions == null) this.solutions =  new HashMap<String, Solution>(); 
 		threadPool = Executors.newFixedThreadPool(numOfThread);
-		
+
 	}
-	
+
 	public void saveHashMaps(){
 		try {
-		FileOutputStream fosMazes = new FileOutputStream("mazes.ser");
-		FileOutputStream fosSolutions = new FileOutputStream("solutions.ser");
-		
-        ObjectOutputStream oosMazes = new ObjectOutputStream(fosMazes);
-        ObjectOutputStream oosSolutions = new ObjectOutputStream(fosSolutions);
-        
-        oosMazes.writeObject(mazes);
-        oosMazes.close();
-        fosMazes.close();
-        
-        oosSolutions.writeObject(solutions);
-        oosSolutions.close();
-        fosSolutions.close();
-        
+			FileOutputStream fosMazes = new FileOutputStream("mazes.ser");
+			FileOutputStream fosSolutions = new FileOutputStream("solutions.ser");
+
+			ObjectOutputStream oosMazes = new ObjectOutputStream(fosMazes);
+			ObjectOutputStream oosSolutions = new ObjectOutputStream(fosSolutions);
+
+			oosMazes.writeObject(mazes);
+			oosMazes.close();
+			fosMazes.close();
+
+			oosSolutions.writeObject(solutions);
+			oosSolutions.close();
+			fosSolutions.close();
+
 		} catch (IOException e) {
-					
+
 			e.printStackTrace();
 		}
+//		try
+//		{
+//			ObjectOutputStream zipMaze = new ObjectOutputStream(new GZIPOutputStream(new FileOutputStream("mazes2.gzip")));
+//			zipMaze.writeObject(mazes);
+//			//zipMaze.writeObject(solutions);
+//			zipMaze.flush();
+//			zipMaze.close();
+//		}
+//		catch(IOException e)
+//		{
+//			e.printStackTrace();
+//		}
+//		
 	}
-	
-	public void loadHashMaps(){
-		 try
+
+	@SuppressWarnings({  "unchecked" })
+	private void loadHashMaps()
+	{
+		try
 	      {
 	         FileInputStream fisMazes = new FileInputStream("mazes.ser");
 	         FileInputStream fisSolutions = new FileInputStream("solutions.ser");
@@ -107,13 +119,36 @@ public class MazeModel extends Observable implements Model, Runnable {
 	         c.printStackTrace();
 	         return;
 	      }
+		
+//		File myFile = new File("mazes2.gzip");
+//		try
+//		{
+//			if(!myFile.createNewFile())
+//			{
+//				ObjectInputStream mazeZip = new ObjectInputStream(new GZIPInputStream(new FileInputStream(myFile)));
+//
+//				this.mazes = (HashMap<String, Maze3d>) mazeZip.readObject();
+//				//this.solutions = (HashMap<String, Solution>) mazeZip.readObject();
+//				
+//				mazeZip.close();
+//			} 
+//		}
+//		catch (IOException | ClassNotFoundException e)
+//		{
+//			e.printStackTrace();
+//		}
+	}
+	
+	void TestZip(){
+		File myFile = new File("test.gzip");
+		
 	}
 
 	public Maze3d getMazeByName(String args) {
 		//Return the maze referenced in args
 		Maze3d m = mazes.get(args);
 		return m;
-		
+
 	}
 
 	public Set<String> listMazes() {
@@ -123,14 +158,15 @@ public class MazeModel extends Observable implements Model, Runnable {
 
 	public void generateMaze(String name, int x, int y, int z) {
 		//Generating a Maze
-//		GrowingTreeGenerator g = new GrowingTreeGenerator();
-//		Maze3d maze = g.generate(x, y, z);
-//		mazes.put(name, maze);
-//
-//		
-//		setChanged();
-//		notifyObservers("maze_ready " + name);
-		
+		//		GrowingTreeGenerator g = new GrowingTreeGenerator();
+		//		Maze3d maze = g.generate(x, y, z);
+		//		mazes.put(name, maze);
+		//
+		//		
+		//		setChanged();
+		//		notifyObservers("maze_ready " + name);
+
+
 		threadPool.submit(new Runnable() {
 
 			@Override
@@ -139,44 +175,52 @@ public class MazeModel extends Observable implements Model, Runnable {
 				Maze3d maze = g.generate(x, y, z);
 				mazes.put(name, maze);
 
-				
-				setChanged();
-				notifyObservers("maze_ready " + name);
-				
 			}
 		});
-		
+
+		setChanged();
+		notifyObservers("maze_ready " + name);
+
 
 	}
 
 	public void solveMaze(String args) {
 		//Creating a solution to the maze in referenced in args
 		//and saving it in database
-		
 		String[] argsArray = args.split(" ");
-		if(solutions.containsKey(argsArray[0])) return; //check if solution is already exist
-		
-		Maze3d maze = mazes.get(argsArray[0]);
-		
-		
-		SearchableMaze searchableMaze = new SearchableMaze(maze);
-		Searcher searcher;
-		Solution solution = null;
-	
-		// Creating solution
-		if (argsArray[1].equalsIgnoreCase("bfs")) {
-			searcher = new BFS();
-			solution = searcher.search(searchableMaze);
-		} else if (argsArray[1].equalsIgnoreCase("dfs")) {
-			searcher = new DFS();
-			solution = searcher.search(searchableMaze);
-		}
-	
-		this.solutions.put(argsArray[0], solution);
-		
+		threadPool.submit(new Runnable() {
+
+			@Override
+			public void run() {
+				if(solutions.containsKey(argsArray[0])) return; //check if solution is already exist
+
+				Maze3d maze = mazes.get(argsArray[0]);
+
+
+				SearchableMaze searchableMaze = new SearchableMaze(maze);
+				Searcher searcher;
+				Solution solution = null;
+
+				// Creating solution
+				if (argsArray[1].equalsIgnoreCase("bfs")) {
+					searcher = new BFS();
+					solution = searcher.search(searchableMaze);
+				} else if (argsArray[1].equalsIgnoreCase("dfs")) {
+					searcher = new DFS();
+					solution = searcher.search(searchableMaze);
+				}
+
+				solutions.put(argsArray[0], solution);
+
+
+
+
+			}
+			
+		});
 		setChanged();
 		notifyObservers("solution_ready " + argsArray[0]);
-	
+
 	}
 
 	public void loadMaze(String args) {
@@ -231,42 +275,42 @@ public class MazeModel extends Observable implements Model, Runnable {
 
 	@Override
 	public void run() {
-	
+
 	}
 
 	public void test() {
-		
 
-		
+
+
 		//generateMaze("bat7", 13, 13, 4);
 
 		//generateMaze("big", 35, 35, 100);
 		//solveMaze("big DFS");
-		
-		
+
+
 	}
 
 	public void exit() {
 		//executor.shutdownNow();
 		saveHashMaps();
-	
+
 	}
 
 	public void displayMaze(String args) {
 		String[] argsArray = args.split(" ");
 		mazes.get(argsArray[0]).printMaze();
-	
+
 	}
 
 	public void displayCross(String args) {
 		String[] argsArray = args.split(" ");
 		Maze3d m = mazes.get(argsArray[2]);
 		int[][] m2d;
-	
+
 		if (argsArray[0].equalsIgnoreCase("x")) {
 			m2d = m.getCrossSectionByX(Integer.valueOf(argsArray[1]));
 			m.printCrossSectionByX(m2d);
-	
+
 		}
 		if (argsArray[0].equalsIgnoreCase("y")) {
 			m2d = m.getCrossSectionByY(Integer.valueOf(argsArray[1]));
@@ -276,7 +320,7 @@ public class MazeModel extends Observable implements Model, Runnable {
 			m2d = m.getCrossSectionByZ(Integer.valueOf(argsArray[1]));
 			m.printCrossSectionByZ(m2d);
 		}
-	
+
 	}
 
 	public void displaySolution(String args) {
@@ -287,19 +331,19 @@ public class MazeModel extends Observable implements Model, Runnable {
 	public Solution getSolution(String args) {
 		Solution s = solutions.get(args);
 		return s;
-		
+
 	}
 
 	public void deleteMaze(String args) {
 		mazes.remove(args);
 		solutions.remove(args);
-		
+
 	}
-	
+
 	public void deleteAllMazes(String args) {
 		mazes.clear();
 		solutions.clear();
-		
+
 	}
 
 	public void loadProperties() {
@@ -308,14 +352,14 @@ public class MazeModel extends Observable implements Model, Runnable {
 		numOfThread = properties.getNumOfThreads();
 		solveAlgorithm = properties.getSolveMaze();
 		generateAlgorithm = properties.getGenerateAlgorithm();
-		
-		
+
+
 	}
 
 	public Properties getProperties() {
 
 		return properties;
 	}
-	
-	
+
+
 }
