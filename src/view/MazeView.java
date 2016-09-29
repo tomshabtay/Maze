@@ -429,16 +429,20 @@ public class MazeView extends BasicWindow implements View {
 	}
 
 	public void getMazeList(Set<String> str) {
-
-		Shell miniShell = new Shell();
-		miniShell.setText("");
-		miniShell.setSize(150, 200);
+		
+		
+		Shell miniShell = new Shell(SWT.TITLE | SWT.BORDER | SWT.APPLICATION_MODAL | SWT.CLOSE);
+		miniShell.setText("Choose maze");
+		miniShell.setSize(300, 200);
 
 		GridLayout layout = new GridLayout(2, false);
 		miniShell.setLayout(layout);
 
 		List l = new List(miniShell, SWT.SINGLE | SWT.BORDER);
 		l.setBounds(50, 50, 75, 75);
+		GridData gd = new GridData();
+		gd.verticalSpan = 6;
+		l.setLayoutData(gd);
 
 		for (String string : str) {
 			l.add(string);
@@ -446,7 +450,7 @@ public class MazeView extends BasicWindow implements View {
 
 		// Choose
 		Button btnDisplay = new Button(miniShell, SWT.PUSH);
-		btnDisplay.setText("Choose");
+		btnDisplay.setText("Choose!");
 		btnDisplay.addSelectionListener(new SelectionListener() {
 
 			@Override

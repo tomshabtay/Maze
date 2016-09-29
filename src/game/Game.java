@@ -99,24 +99,24 @@ public class Game {
 		arraySolutionSteps = s.getStates();
 
 		solutionSteps = arraySolutionSteps.size();
-		count = solutionSteps;
+		//count = solutionSteps;
 
 
 	}
 
 	public boolean moveCharcterToSolution(){
 
-		if (count <= 0) return true;
+		if (count >= solutionSteps-1) return true;
 
-		System.out.println(arraySolutionSteps.get(solutionSteps - count).getValue());
+		System.out.println(arraySolutionSteps.get(solutionSteps - 1 - count).getValue());
 
-		Object p = arraySolutionSteps.get(solutionSteps - count).getValue();
+		Object p = arraySolutionSteps.get(solutionSteps - 1 - count).getValue();
 		int x = ((Position)p).getX();
 		int y = ((Position)p).getY();
 		int z = ((Position)p).getZ();
 
 		character.p.set(x, y, z);
-		count--;
+		count++;
 		return false;
 	}
 
