@@ -23,6 +23,7 @@ import commands.deleteAllMazesCommand;
 import commands.deleteMazeCommand;
 import commands.exitCommand;
 import commands.getMazeSolutionCommand;
+import commands.loadPropertiesCommand;
 import commands.mazeReadyCommand;
 import commands.solutionReadyCommand;
 import model.MazeModel;
@@ -63,6 +64,7 @@ public class Presenter implements Observer {
 		commands.put("delete_all_mazes", new deleteAllMazesCommand(this));
 		commands.put("maze_ready", new mazeReadyCommand(this));
 		commands.put("solution_ready", new solutionReadyCommand(this));
+		commands.put("load_properties", new loadPropertiesCommand(this));
 
 
 
@@ -181,6 +183,13 @@ public class Presenter implements Observer {
 
 	public void solutionReady(String args) {
 		view.displayMessage("The solution for '" + args+"' is ready.");
+		
+	}
+
+	public void loadProperties() {
+		model.loadProperties();
+		Properties p = model.getProperties();
+		view.setProperties(p);
 		
 	}
 

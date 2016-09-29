@@ -108,7 +108,7 @@ public class Game {
 
 		if (count >= solutionSteps-1) return true;
 
-		System.out.println(arraySolutionSteps.get(solutionSteps - 1 - count).getValue());
+		//System.out.println(arraySolutionSteps.get(solutionSteps - 1 - count).getValue());
 
 		Object p = arraySolutionSteps.get(solutionSteps - 1 - count).getValue();
 		int x = ((Position)p).getX();

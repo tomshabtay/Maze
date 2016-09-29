@@ -36,15 +36,13 @@ public class MazeDisplay extends Canvas {
 	TimerTask timerTask;
 	Maze3d maze;
 	Image floor;
+	Random random;
 
-	public void MazeDisplay(){
-
-	}
 
 	private boolean finished = false;
 
 	public void setMazeData(int[][] mazeData) {
-		floor = new Image(null, "./pic/floor.jpg");
+		
 		this.mazeData = mazeData;
 		this.maze = null;
 		this.redraw();
@@ -53,6 +51,8 @@ public class MazeDisplay extends Canvas {
 	public MazeDisplay(Shell parent, int style) {
 		super(parent, style);
 		// setMaze(maze);
+		floor = new Image(null, "./pic/floor.jpg");
+		random = new Random();
 
 		// Key Listener
 		this.addKeyListener(new KeyAdapter() {
@@ -115,7 +115,7 @@ public class MazeDisplay extends Canvas {
 					Color c = new Color(null,r.nextInt(255),r.nextInt(255),r.nextInt(255));
 					e.gc.setForeground(new Color(null, 0, 0, 0));
 					e.gc.setBackground(new Color(null, 0, 0, 0));
-					for (int i = 0; i < 300; i++) {
+					for (int i = 0; i < 500; i++) {
 						c = new Color(null,r.nextInt(255),r.nextInt(255),r.nextInt(255));
 
 						e.gc.setForeground(c);
@@ -124,7 +124,7 @@ public class MazeDisplay extends Canvas {
 								r.nextInt(100), r.nextInt(100));
 					}
 
-					e.gc.drawText("Victory!!!!!! yay", getDisplay().getBounds().width/2, getDisplay().getBounds().height/2);
+					
 
 					//
 					//					///////////////////////////////////////
@@ -171,8 +171,9 @@ public class MazeDisplay extends Canvas {
 
 					e.gc.setForeground(new Color(null, 0, 0, 0));
 					e.gc.setBackground(new Color(null, 0, 0, 0));
-					//Image floor = new Image(null, "./pic/floor.jpg");
-					//e.gc.drawImage(floor, 0, 0, 4412,4393,0,0,getDisplay().getBounds().width,getDisplay().getBounds().height);
+				//	floor = new Image(null, "./pic/floor.jpg");
+					int place = random.nextInt(60);
+					e.gc.drawImage(floor, 0,0, 4000,4000,0,0,getDisplay().getBounds().width,getDisplay().getBounds().height);
 					int width = getSize().x;
 					int height = getSize().y;
 
@@ -283,15 +284,14 @@ public class MazeDisplay extends Canvas {
 	}
 
 	public void finished(){
-		System.out.println("finished");
 		finished  = true;
 		redraw();
 	}
 
 	public boolean onMazeGoal(){
-		System.out.println("c: "+ this.character.getP());
-		System.out.println("                                   e: "+ maze.getGoalPosition());
-		System.out.println("                                  asd: "+ maze.getStartPosition());
+//		System.out.println("c: "+ this.character.getP());
+//		System.out.println("                                   e: "+ maze.getGoalPosition());
+//		System.out.println("                                  asd: "+ maze.getStartPosition());
 		if(this.character.getP().equals(maze.getGoalPosition())) return true;
 		else return false;
 

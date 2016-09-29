@@ -4,7 +4,7 @@ import java.beans.XMLEncoder;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 
-import model.Properties;
+import presenter.Properties;
 
 public class RunProperties {
 

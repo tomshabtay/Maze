@@ -18,14 +18,18 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 
+import com.sun.media.sound.PortMixerProvider;
+
 import algorithms.mazeGenerators.Maze3d;
 import algorithms.search.Solution;
+import presenter.Properties;
 
 public class MazeView extends BasicWindow implements View {
 
 	// A maze display to show and play the current maze
 	private MazeDisplay mazeDisplay;
 	private String choosenMaze = "itzik";
+	private Properties properties;
 
 	@Override
 	protected void initWidgets() {
@@ -37,12 +41,22 @@ public class MazeView extends BasicWindow implements View {
 		mazeDisplay.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		// Buttons
-		Composite btnGroup1 = new Composite(shell, SWT.BORDER);
+		Composite btnGroups = new Composite(shell, SWT.NONE);
+		btnGroups.setLayout(new GridLayout(1, false));
+
+		
+		Composite btnGroup2 = new Composite(btnGroups, SWT.BORDER);
+		Composite btnGroup1 = new Composite(btnGroups, SWT.BORDER);
+		Composite btnGroupEnd = new Composite(btnGroups, SWT.BORDER);
 		RowLayout rowLayout = new RowLayout(SWT.VERTICAL);
+		
+		
 		btnGroup1.setLayout(rowLayout);
+		btnGroup2.setLayout(rowLayout);
+		btnGroupEnd.setLayout(rowLayout);
 
 		// Button Play
-		Button btnPlay = new Button(btnGroup1, SWT.PUSH);
+		Button btnPlay = new Button(btnGroup2, SWT.PUSH | SWT.FILL);
 		btnPlay.setText("Play");
 
 		btnPlay.addSelectionListener(new SelectionListener() {
@@ -63,32 +77,32 @@ public class MazeView extends BasicWindow implements View {
 
 		});
 		
-		// Button Play
-				Button btnHint = new Button(btnGroup1, SWT.PUSH);
-				btnHint.setText("Hint");
-
-				btnHint.addSelectionListener(new SelectionListener() {
-
-					@Override
-					public void widgetSelected(SelectionEvent arg0) {
-						mazeDisplay.showHint();
-
-					}
-
-					@Override
-					public void widgetDefaultSelected(SelectionEvent arg0) {
-						// TODO Auto-generated method stub
-
-					}
-
-				});
+		// Button Hint
+//				Button btnHint = new Button(btnGroup1, SWT.PUSH);
+//				btnHint.setText("Hint");
+//
+//				btnHint.addSelectionListener(new SelectionListener() {
+//
+//					@Override
+//					public void widgetSelected(SelectionEvent arg0) {
+//						mazeDisplay.showHint();
+//
+//					}
+//
+//					@Override
+//					public void widgetDefaultSelected(SelectionEvent arg0) {
+//						// TODO Auto-generated method stub
+//
+//					}
+//
+//				});
 
 		
 		
 		
 		
 		// Button Show Solution
-				Button btnShowSolution = new Button(btnGroup1, SWT.PUSH);
+				Button btnShowSolution = new Button(btnGroup2, SWT.PUSH | SWT.FILL);
 				btnShowSolution.setText("Show Solution");
 
 				btnShowSolution.addSelectionListener(new SelectionListener() {
@@ -138,7 +152,7 @@ public class MazeView extends BasicWindow implements View {
 
 		// Button Solve Maze
 		Button btnSolveMaze = new Button(btnGroup1, SWT.PUSH);
-		btnSolveMaze.setText("Solve maze");
+		btnSolveMaze.setText("Generate solution");
 
 		btnSolveMaze.addSelectionListener(new SelectionListener() {
 
@@ -174,8 +188,29 @@ public class MazeView extends BasicWindow implements View {
 			}
 		});
 		
+		// Button Load Properties
+		Button btnPropLoad = new Button(btnGroupEnd, SWT.PUSH);
+		btnPropLoad.setText("Load Properties");
+
+		btnPropLoad.addSelectionListener(new SelectionListener() {
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				loadProperties();
+					
+				
+
+			}
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+
+			}
+		});
+		
 		// Button Exit
-				Button btnExit = new Button(btnGroup1, SWT.PUSH);
+				Button btnExit = new Button(btnGroupEnd, SWT.PUSH);
 				btnExit.setText("Exit");
 
 				btnExit.addSelectionListener(new SelectionListener() {
@@ -376,13 +411,19 @@ public class MazeView extends BasicWindow implements View {
 		Button[] radios = new Button[2];
 
 		radios[0] = new Button(shell, SWT.RADIO);
-		radios[0].setSelection(true);
 		radios[0].setText("DFS");
 		radios[0].setBounds(10, 5, 75, 30);
 
 		radios[1] = new Button(shell, SWT.RADIO);
 		radios[1].setText("BFS");
 		radios[1].setBounds(10, 5, 75, 30);
+		
+		//set Default
+		
+		if(properties!=null&&properties.getSolveMaze().equalsIgnoreCase("BFS"))radios[1].setSelection(true);
+		else{
+			radios[0].setSelection(true);
+		}
 
 		// Button Solve
 		Button btnSolve = new Button(shell, SWT.PUSH);
@@ -548,8 +589,20 @@ public class MazeView extends BasicWindow implements View {
 		
 	}
 
+	protected void loadProperties() {
+		setChanged();
+		notifyObservers("load_properties");
+		
+	}
+
 	public void exit() {
+		display.dispose();
 		shell.dispose();
+		
+	}
+
+	public void setProperties(Properties p) {
+		properties = p;
 		
 	}
 

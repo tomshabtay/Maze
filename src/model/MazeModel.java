@@ -15,6 +15,7 @@ import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.zip.GZIPOutputStream;
 
 import algorithms.mazeGenerators.GrowingTreeGenerator;
@@ -27,25 +28,33 @@ import algorithms.search.Solution;
 import io.MyCompressorOutputStream;
 import io.MyDecompressorInputStream;
 import presenter.Presenter;
+import presenter.Properties;
+import presenter.PropertiesLoader;
 
 public class MazeModel extends Observable implements Model, Runnable {
 
 	HashMap<String, Solution> solutions;
 	HashMap<String, Maze3d> mazes;
+	ExecutorService threadPool;
 	
-	//Properties properties;
+	Properties properties;
+	int numOfThread = 0;
+	String generateAlgorithm;
+	String solveAlgorithm;
+	
 	//private ExecutorService executor;
+	
 
 	Maze3d currentMaze;
 	
 	public MazeModel() {
-		// properties = PropertiesLoader.getInstance().getProperties();
-		// executor =
-		// Executors.newFixedThreadPool(properties.getNumOfThreads());
 		
+		loadProperties();
 		loadHashMaps();
 		if(mazes == null) this.mazes = new HashMap<String, Maze3d>(); 
 		if(solutions == null) this.solutions =  new HashMap<String, Solution>(); 
+		threadPool = Executors.newFixedThreadPool(numOfThread);
+		
 	}
 	
 	public void saveHashMaps(){
@@ -114,13 +123,28 @@ public class MazeModel extends Observable implements Model, Runnable {
 
 	public void generateMaze(String name, int x, int y, int z) {
 		//Generating a Maze
-		GrowingTreeGenerator g = new GrowingTreeGenerator();
-		Maze3d maze = g.generate(x, y, z);
-		mazes.put(name, maze);
-
+//		GrowingTreeGenerator g = new GrowingTreeGenerator();
+//		Maze3d maze = g.generate(x, y, z);
+//		mazes.put(name, maze);
+//
+//		
+//		setChanged();
+//		notifyObservers("maze_ready " + name);
 		
-		setChanged();
-		notifyObservers("maze_ready " + name);
+		threadPool.submit(new Runnable() {
+
+			@Override
+			public void run(){
+				GrowingTreeGenerator g = new GrowingTreeGenerator();
+				Maze3d maze = g.generate(x, y, z);
+				mazes.put(name, maze);
+
+				
+				setChanged();
+				notifyObservers("maze_ready " + name);
+				
+			}
+		});
 		
 
 	}
@@ -276,6 +300,21 @@ public class MazeModel extends Observable implements Model, Runnable {
 		mazes.clear();
 		solutions.clear();
 		
+	}
+
+	public void loadProperties() {
+		PropertiesLoader propertiesLoader = new PropertiesLoader();
+		properties = propertiesLoader.getProperties();
+		numOfThread = properties.getNumOfThreads();
+		solveAlgorithm = properties.getSolveMaze();
+		generateAlgorithm = properties.getGenerateAlgorithm();
+		
+		
+	}
+
+	public Properties getProperties() {
+
+		return properties;
 	}
 	
 	
