@@ -56,8 +56,8 @@ public class MazeModel extends Observable implements Model, Runnable {
 
 	public void saveHashMaps(){
 		try {
-			FileOutputStream fosMazes = new FileOutputStream("mazes.ser");
-			FileOutputStream fosSolutions = new FileOutputStream("solutions.ser");
+			FileOutputStream fosMazes = new FileOutputStream("resources/mazes.ser");
+			FileOutputStream fosSolutions = new FileOutputStream("resources/solutions.ser");
 
 			ObjectOutputStream oosMazes = new ObjectOutputStream(fosMazes);
 			ObjectOutputStream oosSolutions = new ObjectOutputStream(fosSolutions);
@@ -94,8 +94,8 @@ public class MazeModel extends Observable implements Model, Runnable {
 	{
 		try
 	      {
-	         FileInputStream fisMazes = new FileInputStream("mazes.ser");
-	         FileInputStream fisSolutions = new FileInputStream("solutions.ser");
+	         FileInputStream fisMazes = new FileInputStream("resources/mazes.ser");
+	         FileInputStream fisSolutions = new FileInputStream("resources/solutions.ser");
 	         
 	         ObjectInputStream oisMazes = new ObjectInputStream(fisMazes);
 	         ObjectInputStream oisSolutions = new ObjectInputStream(fisSolutions);

@@ -16,12 +16,12 @@ public class GameCharacter{
 	}
 	public void print(PaintEvent e, int pointX, int pointY, int width, int height) 
 	{
-		Image i = new Image(null, "./pic/timhead.png");
+		Image i = new Image(null, "./resources/timhead.png");
 		e.gc.drawImage(i, 0, 0, 256, 256, pointX, pointY, width, height);
 	}
 	
 	public void paint(PaintEvent e,int w,int h){
-			Image i = new Image(null, "./pic/timhead.png");
+			Image i = new Image(null, "./resources/timhead.png");
 			
 		   //e.gc.setForeground(new Color(null,255,140,0));
 		   //e.gc.setBackground(new Color(null,255,140,0));

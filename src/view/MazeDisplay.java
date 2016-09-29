@@ -51,7 +51,7 @@ public class MazeDisplay extends Canvas {
 	public MazeDisplay(Shell parent, int style) {
 		super(parent, style);
 		// setMaze(maze);
-		floor = new Image(null, "./pic/floor.jpg");
+		floor = new Image(null, "./resources/floor.jpg");
 		random = new Random();
 
 		// Key Listener
@@ -63,38 +63,38 @@ public class MazeDisplay extends Canvas {
 					if(onMazeGoal()) finished();
 				}
 
-				if (e.character == 'w') {
+				if (e.character == 'w' || e.keyCode == SWT.ARROW_UP) {
 
 					game.moveUp();
 					if(onMazeGoal()) finished();
 					redraw();
 				}
-				if (e.character == 's') {
+				if (e.character == 's' || e.keyCode == SWT.ARROW_DOWN) {
 					game.moveDown();
 					if(onMazeGoal()) finished();
 					redraw();
 
 				}
-				if (e.character == 'd') {
+				if (e.character == 'd' || e.keyCode == SWT.ARROW_RIGHT) {
 					game.moveRight();
 					if(onMazeGoal()) finished();
 					redraw();
 
 				}
-				if (e.character == 'a') {
+				if (e.character == 'a' || e.keyCode == SWT.ARROW_LEFT) {
 					game.moveLeft();
 					if(onMazeGoal()) finished();
 					redraw();
 
 				}
 
-				if (e.character == 'e') {
+				if (e.character == 'e' || e.keyCode == SWT.PAGE_UP) {
 					game.moveFloorUp();
 					if(onMazeGoal()) finished();
 					redraw();
 
 				}
-				if (e.character == 'q') {
+				if (e.character == 'q' || e.keyCode == SWT.PAGE_DOWN)  {
 					game.moveFloorDown();
 					if(onMazeGoal()) finished();
 					redraw();
@@ -124,40 +124,6 @@ public class MazeDisplay extends Canvas {
 								r.nextInt(100), r.nextInt(100));
 					}
 
-					
-
-					//
-					//					///////////////////////////////////////
-					//					//					timer = new Timer();
-					//					//					
-					//					//
-					//					//					getDisplay().asyncExec(new Runnable() {
-					//					//
-					//					//						@Override
-					//					//						public void run() {
-					//					//							e.gc.fillRectangle(r.nextInt(getDisplay().getBounds().width), r.nextInt(getDisplay().getBounds().height), 10, 10);
-					//					//
-					//					//						}
-					//					//					});
-					//					//
-					//					//					timer.scheduleAtFixedRate(timerTask, 0, 2000);
-					//
-					//
-					//					//					int i = 0;
-					//					//					Random r = new Random();
-					//					//					timer = new Timer();
-					//					//					
-					//					//					timerTask = new TimerTask() {
-					//					//						@Override
-					//					//						public void run() {
-					//					//							
-					//					//							e.gc.fillRectangle(r.nextInt(getDisplay().getBounds().width), r.nextInt(getDisplay().getBounds().height), 10, 10);
-					//					//
-					//					//
-					//					//						}
-					//					//
-					//					//					};
-					//					//					timer.scheduleAtFixedRate(timerTask, 0, 300);
 					finished = false;
 
 				}

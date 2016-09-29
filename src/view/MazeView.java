@@ -37,7 +37,7 @@ public class MazeView extends BasicWindow implements View {
 		GridLayout gridLayout = new GridLayout(2, false);
 		shell.setLayout(gridLayout);
 
-		mazeDisplay = new MazeDisplay(shell, SWT.BORDER);
+		mazeDisplay = new MazeDisplay(shell, SWT.BORDER | SWT.DOUBLE_BUFFERED);
 		mazeDisplay.setLayoutData(new GridData(SWT.FILL, SWT.FILL, true, true));
 
 		// Buttons
